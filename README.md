@@ -46,45 +46,79 @@
 - **Lucide React** - 아이콘
 - **@react-google-maps/api** - React용 Google Maps 통합
 
-## 설치 및 실행
+## 🚀 빠른 시작
 
-### 1. 저장소 클론
+### 🚨 404 에러가 발생하나요?
+
+**[SETUP_GUIDE.md](./SETUP_GUIDE.md)** 문서를 먼저 확인하세요! 모든 문제 해결 방법이 상세히 설명되어 있습니다.
+
+### 기본 설치 및 실행
+
+#### 1. 저장소 클론
 
 \`\`\`bash
 git clone https://github.com/superokok/solideo-Day2-01-07-Practice2.git
 cd solideo-Day2-01-07-Practice2
 \`\`\`
 
-### 2. 의존성 설치
+#### 2. 의존성 설치
 
 \`\`\`bash
 npm install
 \`\`\`
 
-### 3. Google Maps API 키 설정
+#### 3. Google Maps API 키 설정
 
-1. [Google Cloud Console](https://console.cloud.google.com/)에서 프로젝트 생성
-2. Maps JavaScript API, Places API, Directions API 활성화
-3. API 키 생성
-4. 프로젝트 루트에 `.env` 파일 생성:
-
-\`\`\`env
-VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
+\`\`\`bash
+# .env 파일 생성
+cp .env.example .env
 \`\`\`
 
-### 4. 개발 서버 실행
+**.env 파일을 열어서 실제 API 키로 변경하세요:**
+
+\`\`\`env
+VITE_GOOGLE_MAPS_API_KEY=your_actual_api_key_here
+\`\`\`
+
+**API 키 발급 방법:**
+1. [Google Cloud Console](https://console.cloud.google.com/) 접속
+2. 프로젝트 생성 후 다음 API 활성화:
+   - Maps JavaScript API
+   - Places API
+   - Directions API
+3. Credentials에서 API Key 생성
+
+#### 4. 개발 서버 실행
 
 \`\`\`bash
 npm run dev
 \`\`\`
 
-브라우저에서 `http://localhost:3000` 접속
+✅ 브라우저에서 **http://localhost:3000** 접속
 
-### 5. 프로덕션 빌드
+#### 5. 프로덕션 빌드
 
 \`\`\`bash
 npm run build
 npm run preview
+\`\`\`
+
+## 문제 해결
+
+### 404 에러
+- **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** 참고
+- 브라우저 캐시 클리어 (`Ctrl + Shift + Delete`)
+- 강력 새로고침 (`Ctrl + F5` 또는 `Cmd + Shift + R`)
+
+### API 키 오류
+- .env 파일이 프로젝트 루트에 있는지 확인
+- API 키가 올바른지 확인
+- Google Cloud Console에서 필수 API들이 활성화되었는지 확인
+
+### 포트 충돌
+\`\`\`bash
+# 다른 포트로 실행
+PORT=3001 npm run dev
 \`\`\`
 
 ## 사용 방법
