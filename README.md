@@ -37,9 +37,9 @@
 
 ### 사전 요구사항
 
-- Node.js 18.0 이상
-- npm 또는 yarn
+- 웹 브라우저 (Chrome, Firefox, Safari 등)
 - Google Maps API 키 (필수)
+- 로컬 웹 서버 (개발용) 또는 GitHub Pages
 
 ### 설치 방법
 
@@ -50,13 +50,7 @@ git clone https://github.com/superokok/solideo-Day2-01-07-Practice2.git
 cd solideo-Day2-01-07-Practice2
 \`\`\`
 
-#### 2. 의존성 설치
-
-\`\`\`bash
-npm install
-\`\`\`
-
-#### 3. Google Maps API 키 설정
+#### 2. Google Maps API 키 설정
 
 **API 키 발급:**
 1. [Google Cloud Console](https://console.cloud.google.com/) 접속
@@ -70,30 +64,48 @@ npm install
 5. "Credentials" → "Create Credentials" → "API Key"
 6. API 키 복사
 
-**환경 변수 설정:**
+**API 키 입력:**
 
-\`\`\`bash
-# .env 파일 생성
-cp .env.example .env
+\`index.html\` 파일을 열어서 10번째 줄의 \`YOUR_GOOGLE_MAPS_API_KEY\`를 실제 API 키로 교체:
 
-# .env 파일을 열어서 API 키 입력
-# VITE_GOOGLE_MAPS_API_KEY=실제_API_키_여기에_붙여넣기
+\`\`\`html
+<!-- 수정 전 -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places,geometry&callback=initMap" async defer></script>
+
+<!-- 수정 후 -->
+<script src="https://maps.googleapis.com/maps/api/js?key=실제_API_키&libraries=places,geometry&callback=initMap" async defer></script>
 \`\`\`
 
-#### 4. 개발 서버 실행
+#### 3. 로컬에서 실행
 
+**방법 1: Python 간이 서버 (추천)**
 \`\`\`bash
-npm run dev
+# Python 3 사용
+python -m http.server 8000
+
+# 또는 Python 2 사용
+python -m SimpleHTTPServer 8000
+\`\`\`
+✅ 브라우저에서 **http://localhost:8000** 접속
+
+**방법 2: VS Code Live Server**
+- VS Code에서 프로젝트 열기
+- Live Server 확장 설치
+- index.html 우클릭 → "Open with Live Server"
+
+**방법 3: Node.js http-server**
+\`\`\`bash
+npx http-server -p 8000
 \`\`\`
 
-✅ 브라우저에서 **http://localhost:3000** 자동 실행
+#### 4. GitHub Pages 배포
 
-#### 5. 프로덕션 빌드
-
-\`\`\`bash
-npm run build
-npm run preview
-\`\`\`
+1. GitHub 저장소의 Settings → Pages
+2. Source: "Deploy from a branch" 선택
+3. Branch: main 또는 원하는 브랜치 선택
+4. 폴더: / (root) 선택
+5. Save 클릭
+6. 몇 분 후 https://사용자명.github.io/저장소명 에서 확인
 
 ## 📖 사용 방법
 
@@ -134,103 +146,115 @@ npm run preview
 ## 🎨 기술 스택
 
 ### Frontend
-- **React 19.2.0** - 최신 React 기능
-- **TypeScript 5.9.3** - 타입 안전성
-- **Vite 7.2.1** - 초고속 빌드
-- **Tailwind CSS 3.x** - 유틸리티 CSS
+- **Vanilla JavaScript (ES6+)** - 순수 자바스크립트, 빌드 도구 불필요
+- **HTML5** - 시맨틱 마크업
+- **CSS3** - CSS Grid, Flexbox, Custom Properties
 
 ### UI/UX
-- **Lucide React** - 아이콘 라이브러리
-- **Framer Motion** - 애니메이션
+- **Font Awesome 6.4.0** - 아이콘 라이브러리 (CDN)
+- **CSS Animations** - 부드러운 전환 효과
 - **Responsive Design** - 모바일 완벽 지원
 
 ### API & Services
-- **Google Maps JavaScript API** - 지도 및 경로
+- **Google Maps JavaScript API** - 지도 및 경로 (CDN)
 - **Google Places API** - 장소 검색 및 정보
 - **Google Directions API** - 경로 안내
 - **Google Geocoding API** - 주소 변환
+
+### 배포
+- **GitHub Pages** - 무료 정적 호스팅
+- **빌드 없이 즉시 배포** - 파일 업로드만으로 완료
 
 ## 📂 프로젝트 구조
 
 \`\`\`
 travelmate-premium/
-├── src/
-│   ├── components/
-│   │   ├── Header.tsx                  # 헤더 컴포넌트
-│   │   ├── TripInputPanel.tsx          # 여행 입력 패널
-│   │   ├── MapDashboard.tsx            # 지도 대시보드
-│   │   ├── RoutePanel.tsx              # 경로 표시 패널
-│   │   └── RecommendationsPanel.tsx    # 추천 패널
-│   ├── services/
-│   │   └── googleMapsService.ts        # Google Maps API 서비스
-│   ├── types/
-│   │   └── index.ts                    # TypeScript 타입 정의
-│   ├── App.tsx                         # 메인 앱 컴포넌트
-│   ├── main.tsx                        # 앱 진입점
-│   └── index.css                       # 전역 스타일
-├── index.html
-├── vite.config.ts
-├── tsconfig.json
-├── tailwind.config.js
-└── package.json
+├── css/
+│   └── style.css                      # 전체 스타일시트
+├── js/
+│   ├── config.js                      # 앱 설정 및 상태 관리
+│   ├── maps.js                        # Google Maps API 통합
+│   ├── ui.js                          # UI 렌더링 및 DOM 조작
+│   └── app.js                         # 메인 애플리케이션 로직
+├── images/                            # 이미지 폴더 (선택사항)
+├── index.html                         # 메인 HTML 파일
+└── README.md                          # 프로젝트 설명
 \`\`\`
 
-## 🎯 핵심 컴포넌트
+**파일 설명:**
+- **index.html** - 메인 진입점, 3단 대시보드 레이아웃 정의
+- **css/style.css** - CSS Grid 기반 반응형 스타일
+- **js/config.js** - 음식/활동/예산/속도 옵션 및 앱 상태
+- **js/maps.js** - Google Maps, Places, Directions API 통합
+- **js/ui.js** - 태그, 버튼, 카드 렌더링 함수
+- **js/app.js** - 폼 제출 및 이벤트 핸들러
 
-### Header
-- 브랜드 로고 및 타이틀
-- 상태 표시
+## 🎯 핵심 기능 모듈
 
-### TripInputPanel
-- 여행 정보 입력 폼
-- 취향 선택 인터페이스
-- 예산/속도 설정
+### 설정 관리 (config.js)
+- 음식/활동 옵션 정의 (각 12개)
+- 예산 3단계 (절약/보통/럭셔리)
+- 속도 3단계 (여유/보통/빠르게)
+- 교통수단별 색상/아이콘 설정
+- 앱 전역 상태 관리
 
-### MapDashboard
-- Google Maps 통합
-- 경로 시각화
-- 마커 표시
+### 지도 통합 (maps.js)
+- Google Maps 초기화 및 설정
+- 주소 → 좌표 변환 (Geocoding)
+- 대중교통 경로 검색 (Directions)
+- 주변 장소 검색 (Places)
+- 마커 및 경로 시각화
 
-### RoutePanel
-- 대중교통 경로 상세 정보
-- 시간/요금 표시
-- 환승 정보
+### UI 렌더링 (ui.js)
+- 동적 태그 생성 (음식/활동)
+- 버튼 그룹 생성 (예산/속도)
+- 경로 카드 렌더링 (버스/지하철/기차)
+- 추천 카드 렌더링 (이미지/평점/가격)
+- 로딩/에러 상태 표시
 
-### RecommendationsPanel
-- AI 추천 장소 리스트
-- 이미지 갤러리
-- 평점 및 리뷰 정보
+### 앱 로직 (app.js)
+- 폼 제출 처리
+- 비동기 API 호출 순서 제어
+- 에러 핸들링
+- 사용자 피드백 관리
 
 ## 🔧 문제 해결
 
 ### API 키 오류
 \`\`\`
-Error: Google Maps API key is required
+Google Maps API error: InvalidKeyMapError
 \`\`\`
-**해결:** .env 파일에 올바른 API 키 설정
+**해결:**
+- index.html 파일의 API 키가 올바른지 확인
+- Google Cloud Console에서 필요한 API가 모두 활성화되었는지 확인
+- API 키 제한 설정 확인 (HTTP referrers 등)
 
 ### 경로 검색 실패
 \`\`\`
 Error: No routes found
 \`\`\`
 **해결:**
-- 출발지/도착지 주소 확인
+- 출발지/도착지 주소를 더 구체적으로 입력
 - 대중교통이 운행되는 시간인지 확인
-- 구체적인 주소 입력 (예: "서울역" 대신 "서울역 1번 출구")
+- 예시: "서울역", "강남역", "부산역" 등 명확한 장소명 사용
 
-### 빌드 오류
-\`\`\`bash
-# node_modules 삭제 후 재설치
-rm -rf node_modules package-lock.json
-npm install
-npm run build
-\`\`\`
+### 지도가 로드되지 않음
+**해결:**
+- 브라우저 개발자 도구(F12) 콘솔 확인
+- API 키가 올바르게 입력되었는지 확인
+- 인터넷 연결 확인
+- 로컬 서버를 통해 실행 중인지 확인 (file:// 프로토콜은 제한될 수 있음)
 
-### 포트 충돌
-\`\`\`bash
-# 다른 포트로 실행
-PORT=3001 npm run dev
-\`\`\`
+### CORS 오류
+**해결:**
+- 로컬 웹 서버를 통해 실행 (Python http.server, VS Code Live Server 등)
+- 파일을 직접 열지 말고 http://localhost를 통해 접근
+
+### GitHub Pages 404 오류
+**해결:**
+- 저장소 설정에서 GitHub Pages가 올바르게 활성화되었는지 확인
+- index.html 파일이 루트 디렉토리에 있는지 확인
+- 대소문자 구분 확인 (파일명, 경로)
 
 ## 🌟 주요 특징
 

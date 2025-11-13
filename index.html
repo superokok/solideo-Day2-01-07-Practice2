@@ -1,31 +1,165 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TravelMate Premium - 스마트 여행 플래너</title>
-    <meta name="description" content="실시간 대중교통과 AI 추천으로 완벽한 여행을 계획하세요" />
+    <meta name="description" content="실시간 대중교통과 AI 추천으로 완벽한 여행을 계획하세요">
 
-    <!-- Single Page Apps for GitHub Pages -->
-    <script type="text/javascript">
-      // Single Page Apps for GitHub Pages
-      // MIT License
-      // https://github.com/rafgraph/spa-github-pages
-      (function(l) {
-        if (l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) {
-            return s.replace(/~and~/g, '&')
-          }).join('?');
-          window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + decoded + l.hash
-          );
-        }
-      }(window.location))
-    </script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places,geometry&callback=initMap" async defer></script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-plane"></i>
+                    <div class="logo-text">
+                        <h1>TravelMate Premium</h1>
+                        <p>AI 기반 스마트 여행 플래너</p>
+                    </div>
+                </div>
+                <div class="header-info">
+                    <span class="badge">실시간 대중교통 연계</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+        <!-- Left Panel - Input -->
+        <aside class="panel panel-left">
+            <div class="panel-content">
+                <!-- Trip Form -->
+                <section class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        여행 계획
+                    </h2>
+                    <form id="tripForm" class="form">
+                        <div class="form-group">
+                            <label>출발지</label>
+                            <input type="text" id="origin" class="input" placeholder="예: 서울역" required>
+                        </div>
+                        <div class="form-group">
+                            <label>도착지</label>
+                            <input type="text" id="destination" class="input" placeholder="예: 부산역" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="far fa-calendar"></i> 출발 날짜</label>
+                                <input type="date" id="departureDate" class="input" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="far fa-clock"></i> 출발 시간</label>
+                                <input type="time" id="departureTime" class="input" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>여행 기간 (일)</label>
+                            <input type="number" id="duration" class="input" value="1" min="1" max="30" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="searchBtn">
+                            <i class="fas fa-search"></i> 경로 검색
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Preferences -->
+                <section class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-utensils"></i>
+                        음식 취향
+                    </h2>
+                    <div class="tag-group" id="cuisineTags"></div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-compass"></i>
+                        선호 활동
+                    </h2>
+                    <div class="tag-group" id="activityTags"></div>
+                </section>
+
+                <div class="form-row">
+                    <section class="section">
+                        <h2 class="section-title">
+                            <i class="fas fa-dollar-sign"></i>
+                            예산
+                        </h2>
+                        <div class="button-group" id="budgetButtons"></div>
+                    </section>
+
+                    <section class="section">
+                        <h2 class="section-title">
+                            <i class="fas fa-bolt"></i>
+                            속도
+                        </h2>
+                        <div class="button-group" id="paceButtons"></div>
+                    </section>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center Panel - Map -->
+        <section class="panel panel-center">
+            <div id="map"></div>
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>경로를 검색하는 중...</p>
+            </div>
+        </section>
+
+        <!-- Right Panel - Results -->
+        <aside class="panel panel-right">
+            <div class="panel-content">
+                <!-- Routes -->
+                <section class="section" id="routesSection">
+                    <h2 class="section-title">
+                        <i class="fas fa-route"></i>
+                        대중교통 경로
+                    </h2>
+                    <div id="routesList"></div>
+                </section>
+
+                <!-- Recommendations -->
+                <section class="section" id="recommendationsSection">
+                    <h2 class="section-title">
+                        <i class="fas fa-star"></i>
+                        AI 추천 장소
+                    </h2>
+                    <div id="recommendationsList"></div>
+                </section>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="empty-state">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>여행을 시작하세요</h3>
+                    <p>출발지와 도착지를 입력해주세요</p>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 TravelMate Premium. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/maps.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
 </html>
