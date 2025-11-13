@@ -25,17 +25,21 @@
    - "Create Credentials" → "API Key"
    - API 키 복사 (예: AIzaSyD...)
 
-5. **API 키 입력**
-   - `index.html` 파일 열기
-   - 10번째 줄 찾기:
-   ```html
-   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places,geometry&callback=initMap" async defer></script>
+5. **환경 변수 파일 생성**
+   ```bash
+   # env.example.js를 env.js로 복사
+   cp env.example.js env.js
    ```
-   - `YOUR_GOOGLE_MAPS_API_KEY`를 복사한 API 키로 교체:
-   ```html
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD...&libraries=places,geometry&callback=initMap" async defer></script>
+
+6. **API 키 입력**
+   - `env.js` 파일 열기
+   - API 키 입력:
+   ```javascript
+   const ENV = {
+       GOOGLE_MAPS_API_KEY: 'AIzaSyD...'  // 여기에 실제 API 키 붙여넣기
+   };
    ```
-   - 저장
+   - 저장 (env.js는 .gitignore에 포함되어 Git에 커밋되지 않습니다)
 
 ## 2단계: 로컬 실행
 
@@ -65,25 +69,57 @@ npx http-server -p 8000
 
 ## 3단계: GitHub Pages 배포
 
+### ⚠️ 중요: API 키 보안
+
+env.js 파일은 .gitignore에 포함되어 있어 Git에 커밋되지 않습니다.
+**공개 저장소에서는 API 키가 노출될 수 있으므로 주의하세요!**
+
+**방법 1: 프라이빗 저장소 사용 (권장)**
+- 저장소를 private으로 설정하고 env.js 포함하여 푸시
+
+**방법 2: 별도 브랜치 사용**
+- gh-pages 브랜치 생성 후 env.js 포함하여 배포
+
 ### GitHub Pages 설정
 
-1. **저장소에 코드 푸시**
+1. **env.js를 임시로 .gitignore에서 제거** (배포용)
+   ```bash
+   # .gitignore 파일 편집하여 'env.js' 줄을 임시로 주석 처리
+   # env.js
+   ```
+
+2. **저장소에 코드 푸시**
    ```bash
    git add .
-   git commit -m "Add travel app"
+   git commit -m "Add travel app with API key"
    git push origin main
    ```
 
-2. **GitHub Pages 활성화**
+3. **.gitignore 원복** (보안 강화)
+   ```bash
+   # .gitignore에서 주석 해제
+   env.js
+
+   git add .gitignore
+   git commit -m "Restore gitignore"
+   git push origin main
+   ```
+
+4. **GitHub Pages 활성화**
    - GitHub 저장소 → Settings
    - 좌측 메뉴 → Pages
    - Source: "Deploy from a branch"
    - Branch: `main` / (root)
    - Save 클릭
 
-3. **배포 확인**
+5. **배포 확인**
    - 2-3분 후 `https://사용자명.github.io/저장소명` 접속
    - 녹색 체크마크 확인: Actions 탭
+
+**더 안전한 방법:**
+- GitHub Actions Secrets 사용 권장 (고급)
+- 프라이빗 저장소 사용
+- API 키에 HTTP Referrer 제한 설정
 
 ## 사용 방법
 

@@ -64,17 +64,26 @@ cd solideo-Day2-01-07-Practice2
 5. "Credentials" → "Create Credentials" → "API Key"
 6. API 키 복사
 
-**API 키 입력:**
+**환경 변수 설정:**
 
-\`index.html\` 파일을 열어서 10번째 줄의 \`YOUR_GOOGLE_MAPS_API_KEY\`를 실제 API 키로 교체:
-
-\`\`\`html
-<!-- 수정 전 -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places,geometry&callback=initMap" async defer></script>
-
-<!-- 수정 후 -->
-<script src="https://maps.googleapis.com/maps/api/js?key=실제_API_키&libraries=places,geometry&callback=initMap" async defer></script>
+\`\`\`bash
+# env.example.js를 env.js로 복사
+cp env.example.js env.js
 \`\`\`
+
+\`env.js\` 파일을 열어서 API 키 입력:
+
+\`\`\`javascript
+// env.js
+const ENV = {
+    GOOGLE_MAPS_API_KEY: '여기에_실제_API_키_붙여넣기'
+};
+\`\`\`
+
+**중요:**
+- ✅ \`env.js\` 파일은 자동으로 .gitignore에 포함되어 Git에 커밋되지 않습니다
+- ✅ API 키가 공개 저장소에 노출되지 않아 안전합니다
+- ⚠️ GitHub Pages 배포 시에는 env.js 파일도 함께 업로드해야 합니다
 
 #### 3. 로컬에서 실행
 
